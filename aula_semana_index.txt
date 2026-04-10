@@ -1,0 +1,111 @@
+aula semana 
+mysql -u root -p ( se tiver senha)
+
+mysql -u
+
+-- Criação do banco de dados
+CREATE DATABASE ecommerce;
+USE ecommerce;
+
+-- TabelaProduto
+CREATE TABLE Produto (
+    produto_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    descricao TEXT,
+    preco DECIMAL(10,2) NOT NULL,
+    quantidade_estoque INT NOT NULL,
+    categoria VARCHAR(100) NOT NULL
+);
+-- Tabela Cliente
+CREATE TABLE Cliente (
+    cliente_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    sobrenome VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    endereco TEXT NOT NULL,
+    telefone VARCHAR(15)
+);-- Tabela Pedido
+CREATE TABLE Pedido (
+    pedido_id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    data_realizacao DATETIME NOT NULL,
+    FOREIGN KEY (cliente_id) REFERENCES Cliente(cliente_id)
+);
+-- Tabela ItemPedido
+CREATE TABLE ItemPedido (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    pedido_id INT NOT NULL,
+    produto_id INT NOT NULL,
+    quantidade INT NOT NULL,
+    FOREIGN KEY (pedido_id) REFERENCES Pedido(pedido_id),
+    FOREIGN KEY (produto_id) REFERENCES Produto(produto_id)
+);
+
+---------------------------------------------------------------------------------------
+-- Índices para melhorar o desempenho
+CREATE INDEX idx_cliente_email ON Cliente(email);
+CREATE INDEX idx_produto_nomeON Produto(nome);
+------------------------------------------------------------------------------------------
+
+3. Consultas SQL
+3.1 Inserção de dados-- Inserir novo produto
+INSERT INTO Produto (nome, descricao, preco, quantidade_estoque, categoria)
+VALUES ('Notebook', 'Notebook de alto desempenho', 3500.00, 10, 'Eletrônicos');-- Inserir novo cliente
+INSERT INTO Cliente (nome, sobrenome, email, endereco, telefone)
+VALUES ('João', 'Silva', 'joao.silva@email.com
+5678');-- Inserir novo pedido
+INSERT INTO Pedido (cliente_id, data_realizacao)
+VALUES (1, NOW());-- Inserir itens do pedido
+INSERT INTO ItemPedido (pedido_id, produto_id, quantidade)
+VALUES (1, 1, 2);
+-------------------------------------------------------------------------------------------------------------
+3.2 Consultas de dados-- Consultar produtos em estoque
+SELECT * FROM Produto WHERE quantidade_estoque > 0;-- Consultar pedidos de um cliente específico
+SELECT Pedido.pedido_id, Pedido.data_realizacao, Cliente.nome, 
+Cliente.sobrenome
+FROM Pedido
+JOIN Cliente ON Pedido.cliente_id = Cliente.cliente_id
+WHERE Cliente.cliente_id = 1;-- Consultar itens de um pedido
+SELECT Produto.nome, ItemPedido.quantidade, Produto.preco
+FROM ItemPedido
+JOIN Produto ON ItemPedido.produto_id = Produto.produto_id
+WHERE ItemPedido.pedido_id= 1;
+--------------------------------------------------------------------------------------------------------------
+3.3 Atualizações-- Atualizar o preço de um produto
+UPDATE Produto
+SET preco = 3600.00
+WHERE produto_id= 1;-- Atualizar o endereço de um cliente
+UPDATE Cliente
+', 'Rua A, 123, São Paulo', '(11) 91234
+SET endereco = 'Rua B, 456, Rio de Janeiro'
+WHERE cliente_id = 1;
+-----------------------------------------------------------------------------------------------------------------
+3.4 Exclusões-- Excluir produto descontinuado
+DELETE FROM Produto
+WHERE produto_id= 1 AND quantidade_estoque= 0;
+-----------------------------------------------------------------------------------------------------------------
+3.5 Relatórios-- Produtos mais vendidos
+SELECT Produto.nome, SUM(ItemPedido.quantidade) AS 
+total_vendido
+FROM ItemPedido
+JOIN Produto ON ItemPedido.produto_id = Produto.produto_id
+GROUP BY Produto.nome
+ORDER BY total_vendido DESC
+LIMIT 5;-- Clientes que mais gastaram
+SELECT Cliente.nome, Cliente.sobrenome, 
+SUM(ItemPedido.quantidade * Produto.preco) AS total_gasto
+FROM Pedido
+JOIN Cliente ON Pedido.cliente_id = Cliente.cliente_id
+JOIN ItemPedido ON Pedido.pedido_id= ItemPedido.pedido_id
+JOIN Produto ON ItemPedido.produto_id = Produto.produto_id
+GROUP BY Cliente.cliente_id
+ORDER BY total_gasto DESC
+LIMIT 5;-- Faturamento mensal
+SELECT DATE_FORMAT(Pedido.data_realizacao, '%Y-%m') AS 
+mes, SUM(ItemPedido.quantidade * Produto.preco) AS 
+faturamento
+FROM Pedido
+JOIN ItemPedido ON Pedido.pedido_id= ItemPedido.pedido_id
+JOIN Produto ON ItemPedido.produto_id = Produto.produto_id
+GROUP BY mes
+ORDER BY mes DESC
