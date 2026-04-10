@@ -1,22 +1,22 @@
 cd C:\xampp\mysql\bin entrar na pasta 
 
 
-mysqldump -u root -p loja > backup_loja.sqlaba criar backup do banco 
+mysqldump -u root -p loja > backup_loja.sqlaba   -- criar backup do banco 
 
-type C:\xampp\mysql\bin\backup_loja.sqlaba verificar se o backup do banco foi feito
+type C:\xampp\mysql\bin\backup_loja.sqlaba    -- verificar se o backup do banco foi feito
 
-mysql -u root -p -e "CREATE DATABASE novo_banco;" criando um novo banco 
+mysql -u root -p -e "CREATE DATABASE novo_banco;   -- criando um novo banco 
 
 mysql -u root -p novo_banco < backup_loja.sqlaba restaurando o banco 
 
-mysql -u root -p -e "USE novo_banco; SHOW TABLES;" verificando as tabelas 
+mysql -u root -p -e "USE novo_banco; SHOW TABLES;   -- verificando as tabelas 
 
 
-mysql -u root -p -e "SELECT * FROM nome_da_tabela;"
+mysql -u root -p -e "SELECT * FROM nome_da_tabela;
 
-mysql -u root -p -e "USE novo_banco; SHOW databases;" verificando todos os bancos 
+mysql -u root -p -e "USE novo_banco; SHOW databases;  -- verificando todos os bancos 
 
-C:\xampp\mysql\bin>mysql -u root -p -e "USE novo_banco;  SELECT * FROM cliente;" verificar os dados da tabela cliente .
+C:\xampp\mysql\bin>mysql -u root -p -e "USE novo_banco;  SELECT * FROM cliente;  --  verificar os dados da tabela cliente .
 
 
 
